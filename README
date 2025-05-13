@@ -1,0 +1,154 @@
+# AI Conversation App Backend
+
+이 프로젝트는 AI 기술(GPT)을 활용한 영어/일본어 회화 학습 앱의 백엔드입니다.
+사용자가 특정 상황(공항, 호텔, 비즈니스 등)을 선택하면, GPT가 해당 역할에 맞는 대화를 생성하고, 한국어 번역 및 발음 가이드를 함께 제공합니다.
+
+---
+
+## ✨ 주요 기능
+
+* ✅ 상황 기반 시나리오 목록 제공 (`/scenarios`)
+* ✅ 시나리오를 기반으로 대화 세션 생성 (`/conversations`)
+* ✅ GPT API 연동으로 실제 대화 시뮬레이션 (`/conversations/:id/messages`)
+* ✅ 한국어 번역 및 발음 가이드 포함
+* ✅ 대화 이력 저장 및 조회 (`/conversations/:id/messages`)
+
+---
+
+## ⚡️ 기술 스택
+
+* **Node.js + Express**: 서버 프레임워크
+* **PostgreSQL**: 관계형 데이터베이스
+* **OpenAI API**: GPT 기반 대화 처리
+* **dotenv**: 환경변수 관리
+* **pg**: PostgreSQL Node.js 드라이버
+
+---
+
+## 📦 설치 및 실행
+
+### 1. 프로젝트 클론 및 의존성 설치
+
+```bash
+npm install
+```
+
+### 2. `.env` 파일 설정
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=ai_app
+DB_PASSWORD=8988
+DB_NAME=ai_app
+PORT=3000
+OPENAI_API_KEY=sk-...
+```
+
+### 3. 서버 실행
+
+```bash
+node app.js
+```
+
+---
+
+## 🔧 데이터베이스 설정
+
+### 1. 유저 및 DB 생성 (psql or pgAdmin)
+
+```sql
+CREATE USER ai_app WITH PASSWORD '8988';
+CREATE DATABASE ai_app;
+GRANT ALL PRIVILEGES ON DATABASE ai_app TO ai_app;
+```
+
+### 2. 테이블 생성
+
+```sql
+CREATE TABLE scenarios (...);
+CREATE TABLE conversations (...);
+CREATE TABLE messages (...);
+```
+
+### 3. 테스트용 시나리오 삽입
+
+```sql
+INSERT INTO scenarios (title, category, language, system_prompt) VALUES (...);
+```
+
+### 4. 권한 부여
+
+```sql
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ai_app;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ai_app;
+```
+
+---
+
+## 🔍 API 테스트 방법
+
+### ✅ 1. Postman 테스트
+
+#### ① GET /scenarios
+
+* URL: `http://localhost:3000/scenarios`
+* 설명: 학습 시나리오 목록 조회
+
+#### ② POST /conversations
+
+```json
+{
+  "user_id": 1,
+  "scenario_id": 6
+}
+```
+
+#### ③ POST /conversations/\:id/messages
+
+```json
+{
+  "user_message": "I'd like to check in."
+}
+
+// 응답 예시
+{
+  "ai": {
+    "original": "Sure! May I see your passport?",
+    "translated": "물론이죠! 여권을 보여주시겠어요?",
+    "pronunciation": "슈얼! 메이 아이 씨 유어 패스포트?"
+  }
+}
+```
+
+#### ④ GET /conversations/\:id/messages
+
+* 전체 대화 기록 조회
+
+### ✅ 2. Postman Collection Import
+
+* 파일: `ai_conversation_postman_collection.json`
+* Postman > Import > File 탭에서 json 불러오기
+
+---
+
+## 🔄 다음 단계
+
+### 🖋️ Swagger 문서 자동화
+
+* `swagger-jsdoc` + `swagger-ui-express`
+* API 명세 자동 생성 및 브라우저 미리보기 제공
+
+### 🚀 프론트엔드 연동 구조 설계
+
+* React 기반 SPA 구조 제안
+* 시나리오 선택 > 대화 진행 > 번역/발음 결과 표시 흐름 구현
+
+---
+
+## 🎉 제작자 코멘트
+
+이 프로젝트는 AI 기반 언어 학습을 누구나 쉽게 시작할 수 있게 만드는 데 목적이 있습니다.
+MVP 개발은 완료된 상태이며, 이후 사용자 인증, 챌린지 모드, 발음 채점 등의 확장을 고려하고 있습니다.
+
+함께 성장할 수 있는 좋은 프로젝트가 되기를 기대합니다!
