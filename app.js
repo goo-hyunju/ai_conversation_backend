@@ -5,7 +5,12 @@ const conversationsRouter = require('./routes/conversations');
 require('dotenv').config();
 app.use(express.json());
 
+// ✅ 라우터 등록 (← 이게 중요!)
+app.use('/scenarios', scenariosRouter);
+app.use('/conversations', conversationsRouter);
 
+
+// ✅ Swagger 설정
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
@@ -26,12 +31,16 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['./routes/*.js'], // 주석 기반 문서 추출 경로
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+const cors = require('cors');
+app.use(cors());
